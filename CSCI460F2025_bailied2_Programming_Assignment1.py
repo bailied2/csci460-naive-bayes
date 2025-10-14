@@ -77,6 +77,7 @@ df["loan"] = df["loan"].map(binaryMap)
 df["contact"] = df["contact"].map(contactMap)
 df["month"] = df["month"].map(monthMap)
 df["poutcome"] = df["poutcome"].map(poutcomeMap)
+df["y"] = df["y"].map(binaryMap)
 
 
 print(df.to_string(max_rows=10))
