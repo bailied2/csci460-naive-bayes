@@ -31,13 +31,9 @@ maritalMap = {
   "divorced":2,
 }
 educationMap = {
-  "illiterate":0,
-  "high.school":1,
-  "basic.4y":2,
-  "basic.6y":3,
-  "basic.9y":4,
-  "university.degree":5,
-  "professional.course":6,
+  "primary":0,
+  "secondary":1,
+  "tertiary":2,
 }
 contactMap = {
   "cellular":0,
@@ -60,7 +56,7 @@ monthMap = {
 poutcomeMap = {
   "failure":0,
   "success":1,
-  "nonexistent":2,
+  "other":2,
 }
 binaryMap = {
   "no":0,
@@ -78,6 +74,9 @@ df["contact"] = df["contact"].map(contactMap)
 df["month"] = df["month"].map(monthMap)
 df["poutcome"] = df["poutcome"].map(poutcomeMap)
 df["y"] = df["y"].map(binaryMap)
+
+# Remove rows with missing cells
+df.dropna(inplace = True)
 
 
 print(df.to_string(max_rows=10))
