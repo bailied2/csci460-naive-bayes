@@ -21,6 +21,8 @@ from sklearn.metrics import (
   classification_report,
 )
 
+### TASK 1: Data preparation
+
 # Import data from bank-full.csv
 df = pd.read_csv('/home/acc.bailied2/csci460/csci460-naive-bayes/bank-full.csv')
 
@@ -99,9 +101,12 @@ df = df.astype("int64")
 X = df.drop("y", axis=1)
 y = df["y"]
 
-# TASK 2: 70% training, 30% testing
+### TASK 2: 70% training, 30% testing
+print("\nTASK 2\n**********")
+
+# Run test 10 times
 for i in range(10):
-  # Create training and testing data sets
+  # Split data into training and testing sets, stratified on the target variable
   X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, stratify=y)
 
   # Create Gaussian Naive Bayes classifier instance
@@ -116,6 +121,39 @@ for i in range(10):
   # measure the performance
   accuracy = accuracy_score(y_test, y_pred)
   f1 = f1_score(y_test, y_pred, average="weighted")
-  print("\nITERATION", i+1, "\n---------")
-  print("The accuracy of my Naive Bayes Model is:", accuracy)
-  print("The F1 Score of my Naive Bayes Model is:", f1)
+  # Print iteration number and results to console
+  print("\n\tITERATION", i+1, "\n\t----------")
+  print("\tThe accuracy of my Naive Bayes Model is:", accuracy)
+  print("\tThe F1 Score of my Naive Bayes Model is:", f1)
+
+### TASK 3: Report impact of splitting data
+print("\nTASK 3\n**********")
+
+# Array of training data splits to use
+training_splits = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+# Loop through each split
+for split in training_splits:
+  ## Output label for split
+  print(f"\nSPLIT {int(split*10)} - {int(split*100)}% Training, {100 - int(split*100)}% Testing\n-------")
+  # Run test 10 times
+  for i in range(10):
+    # Split data into training and testing sets, stratified on the target variable
+    # Additionally, use the current split value from the outer loop for training size
+    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=split, stratify=y)
+
+    # Create Gaussian Naive Bayes classifier instance
+    gnb = GaussianNB()
+
+    # Train (or fit) classifier to the training data
+    gnb.fit(X_train, y_train)
+
+    # Use the trained model to generate predictions for the test data
+    y_pred = gnb.predict(X_test)
+
+    # measure the performance
+    accuracy = accuracy_score(y_test, y_pred)
+    f1 = f1_score(y_test, y_pred, average="weighted")
+    # Print iteration number and results to console
+    print("\n\tITERATION", i+1, "\n\t----------")
+    print("\tThe accuracy of my Naive Bayes Model is:", accuracy)
+    print("\tThe F1 Score of my Naive Bayes Model is:", f1)
