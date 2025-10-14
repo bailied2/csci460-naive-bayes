@@ -135,6 +135,8 @@ training_splits = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
 for split in training_splits:
   ## Output label for split
   print(f"\nSPLIT {int(split*10)} - {int(split*100)}% Training, {100 - int(split*100)}% Testing\n-------")
+  print("\tITERATION #:\tACCURACY\t\tF1-SCORE")
+  print("\t------------\t--------\t\t--------")
   # Run test 10 times
   for i in range(10):
     # Split data into training and testing sets, stratified on the target variable
@@ -154,6 +156,4 @@ for split in training_splits:
     accuracy = accuracy_score(y_test, y_pred)
     f1 = f1_score(y_test, y_pred, average="weighted")
     # Print iteration number and results to console
-    print("\n\tITERATION", i+1, "\n\t----------")
-    print("\tThe accuracy of my Naive Bayes Model is:", accuracy)
-    print("\tThe F1 Score of my Naive Bayes Model is:", f1)
+    print(f"\tITERATION {i+1}:\t{accuracy}\t{f1}")
