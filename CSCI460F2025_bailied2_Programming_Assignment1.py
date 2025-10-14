@@ -5,8 +5,21 @@
 #  Assignment Due Date: 10/14/2025
 #  GitHub Link: https://github.com/bailied2/csci460-naive-bayes
 ######################################################
+
+# Import pandas for dataframe
 import pandas as pd 
-import sklearn.naive_bayes
+# Import model selection function
+from sklearn.model_selection import train_test_split
+# Import classification algorithm
+from sklearn.naive_bayes import GaussianNB
+# Import performance metric libraries
+from sklearn.metrics import (
+  accuracy_score,
+  confusion_matrix,
+  ConfusionMatrixDisplay,
+  f1_score,
+  classification_report,
+)
 
 # Import data from bank-full.csv
 df = pd.read_csv('/home/acc.bailied2/csci460/csci460-naive-bayes/bank-full.csv')
@@ -78,5 +91,15 @@ df["y"] = df["y"].map(binaryMap)
 # Remove rows with missing cells
 df.dropna(inplace = True)
 
+# Some columns automatically get set as floats.
+# Let us set them all to integers.
+df = df.astype("int64")
 
-print(df.to_string(max_rows=10))
+# Set X and y variables
+X = df.drop("y", axis=1)
+y = df["y"]
+
+
+print(X.head(10))
+print("---")
+print(y.head(10))
