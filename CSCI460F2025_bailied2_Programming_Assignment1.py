@@ -99,13 +99,23 @@ df = df.astype("int64")
 X = df.drop("y", axis=1)
 y = df["y"]
 
-# Create training and testing data sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42, stratify=y)
+# TASK 2: 70% training, 30% testing
+for i in range(10):
+  # Create training and testing data sets
+  X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, stratify=y)
 
-gnb = GaussianNB()
+  # Create Gaussian Naive Bayes classifier instance
+  gnb = GaussianNB()
 
-gnb.fit(X_train, y_train)
+  # Train (or fit) classifier to the training data
+  gnb.fit(X_train, y_train)
 
-print(X.head(10))
-print("---")
-print(y.head(10))
+  # Use the trained model to generate predictions for the test data
+  y_pred = gnb.predict(X_test)
+
+  # measure the performance
+  accuracy = accuracy_score(y_test, y_pred)
+  f1 = f1_score(y_test, y_pred, average="weighted")
+  print("\nITERATION", i+1, "\n---------")
+  print("The accuracy of my Naive Bayes Model is:", accuracy)
+  print("The F1 Score of my Naive Bayes Model is:", f1)
