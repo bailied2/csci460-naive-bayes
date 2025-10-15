@@ -6,6 +6,8 @@
 #  GitHub Link: https://github.com/bailied2/csci460-naive-bayes
 ######################################################
 
+# Import numpy for calculating mean and standard deviation
+import numpy as np
 # Import pandas for dataframe
 import pandas as pd 
 # Import model selection function
@@ -15,11 +17,9 @@ from sklearn.naive_bayes import GaussianNB
 # Import performance metric libraries
 from sklearn.metrics import (
   accuracy_score,
-  confusion_matrix,
-  ConfusionMatrixDisplay,
   f1_score,
-  classification_report,
 )
+
 
 ### TASK 1: Data preparation
 
@@ -39,6 +39,7 @@ jobMap = {
   "student":8,
   "technician":9,
   "unemployed":10,
+  "unknown":11,
   }
 maritalMap = {
   "single":0,
@@ -49,6 +50,7 @@ educationMap = {
   "primary":0,
   "secondary":1,
   "tertiary":2,
+  "unknown":3,
 }
 contactMap = {
   "cellular":0,
@@ -72,6 +74,7 @@ poutcomeMap = {
   "failure":0,
   "success":1,
   "other":2,
+  "unknown":3,
 }
 binaryMap = {
   "no":0,
@@ -92,10 +95,6 @@ df["y"] = df["y"].map(binaryMap)
 
 # Remove rows with missing cells
 df.dropna(inplace = True)
-
-# Some columns automatically get set as floats.
-# Let us set them all to integers.
-df = df.astype("int64")
 
 # Set X and y variables
 X = df.drop("y", axis=1)
@@ -134,9 +133,11 @@ training_splits = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
 # Loop through each split
 for split in training_splits:
   ## Output label for split
-  print(f"\nSPLIT {int(split*10)} - {int(split*100)}% Training, {100 - int(split*100)}% Testing\n-------")
+  print(f"\n{int(split*100)}% Training, {100 - int(split*100)}% Testing\n-------")
   print("\tITERATION #:\tACCURACY\t\tF1-SCORE")
   print("\t------------\t--------\t\t--------")
+  accuracies = []
+  f1_scores = []
   # Run test 10 times
   for i in range(10):
     # Split data into training and testing sets, stratified on the target variable
@@ -155,5 +156,18 @@ for split in training_splits:
     # measure the performance
     accuracy = accuracy_score(y_test, y_pred)
     f1 = f1_score(y_test, y_pred, average="weighted")
+    accuracies.append(accuracy)
+    f1_scores.append(f1)
     # Print iteration number and results to console
     print(f"\tITERATION {i+1}:\t{accuracy}\t{f1}")
+
+  # Calculate mean and standard deviation for both accuracies and F1-scores
+  mean_accuracy = np.mean(accuracies)
+  mean_f1 = np.mean(f1_scores)
+  stdev_acc = np.std(accuracies, ddof=1)
+  stdev_f1 = np.std(f1_scores, ddof=1)
+
+  print(f"\tAverage Accuracy: {mean_accuracy}")
+  print(f"\tAverage F1-score: {mean_f1}")
+  print(f"\tStandard Deviation of Accuracy: {stdev_acc}")
+  print(f"\tStandard Deviation of F1-score: {stdev_f1}")
